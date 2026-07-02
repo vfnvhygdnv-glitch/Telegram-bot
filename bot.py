@@ -20,7 +20,7 @@ SELECTING_PRODUCT, SELECTING_OPTION, WAITING_FOR_PAYMENT_PROOF = range(3)
 # Product and Prices
 PRODUCTS = {
     'capcut_pro': {
-        'name_mm': 'CapCut Pro',
+        'name_mm': '🎬 CapCut Pro',
         'options': {
             'capcut_share': {'name_mm': '1 Device (Share)', 'price_mm': '10,000 MMK'},
             'capcut_1_private': {'name_mm': '1 Device Private Acc', 'price_mm': '17,000 MMK', 'note_mm': '✅ ရောင်းသူမှ Gmail ပေးပါမည်။'},
@@ -28,7 +28,7 @@ PRODUCTS = {
         }
     },
     'tiktok_services': {
-        'name_mm': 'TikTok Services',
+        'name_mm': '🎵 TikTok Services',
         'options': {
             'tiktok_like': {'name_mm': 'Like 1K', 'price_mm': '6,000 MMK'},
             'tiktok_view': {'name_mm': 'View 1K', 'price_mm': '2,000 MMK'},
@@ -38,25 +38,25 @@ PRODUCTS = {
         }
     },
     'alight_motion': {
-        'name_mm': 'Alight Motion Premium',
+        'name_mm': '🌟 Alight Motion Premium',
         'options': {
             'alight_1year': {'name_mm': '1 Year', 'price_mm': '15,000 MMK'},
         }
     },
     'canva_pro': {
-        'name_mm': 'Canva Pro Lifetime',
+        'name_mm': '🎨 Canva Pro Lifetime',
         'options': {
             'canva_1year': {'name_mm': '1 Year', 'price_mm': '15,000 MMK'},
         }
     },
     'gemini_ai': {
-        'name_mm': 'Gemini AI',
+        'name_mm': '🤖 Gemini AI',
         'options': {
             'gemini_1year': {'name_mm': '1 Year', 'price_mm': '40,000 MMK'},
         }
     },
     'tiktok_boosting': {
-        'name_mm': 'TikTok Boosting Service',
+        'name_mm': '🚀 TikTok Boosting Service',
         'options': {
             'boost_3': {'name_mm': '3$ Package', 'price_mm': '22,000 MMK'},
             'boost_4': {'name_mm': '4$ Package', 'price_mm': '29,500 MMK'},
@@ -69,7 +69,7 @@ PRODUCTS = {
         }
     },
     'telegram_premium': {
-        'name_mm': 'Telegram Premium',
+        'name_mm': '⭐ Telegram Premium',
         'options': {
             'tg_3months': {'name_mm': '3 Months', 'price_mm': '60,000 MMK', 'note_mm': '✅ Gift Link ဖြင့်ပေးပါတယ်။ Visa Card ဖြင့် ဝယ်ပေးတာဖြစ်ပါတယ်။ Account 100% အာမခံပါတယ်။'},
             'tg_6months': {'name_mm': '6 Months', 'price_mm': '89,000 MMK', 'note_mm': '✅ Gift Link ဖြင့်ပေးပါတယ်။ Visa Card ဖြင့် ဝယ်ပေးတာဖြစ်ပါတယ်။ Account 100% အာမခံပါတယ်။'},
@@ -77,7 +77,7 @@ PRODUCTS = {
         }
     },
     'tiktok_coin': {
-        'name_mm': 'TikTok Coin Service',
+        'name_mm': '💰 TikTok Coin Service',
         'options': {
             'coin_300': {'name_mm': '300 Coins', 'price_mm': '17,200 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။ (15 မိနစ်အတွင်း)'},
             'coin_500': {'name_mm': '500 Coins', 'price_mm': '28,600 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။ (15 မိနစ်အတွင်း)'},
