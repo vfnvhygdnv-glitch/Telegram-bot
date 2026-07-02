@@ -1,4 +1,5 @@
 import logging
+import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, ConversationHandler, ContextTypes, filters
 
@@ -10,7 +11,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Bot Token and Owner ID
-BOT_TOKEN = '8264683686:AAEGr8mNpsI4Wm_GLMZYaurjaEomIKAb1u4'
+BOT_TOKEN = os.environ.get('BOT_TOKEN', '8264683686:AAEGr8mNpsI4Wm_GLMZYaurjaEomIKAb1u4')
 OWNER_TELEGRAM_ID = 5911159063  # Thiha Tun's Telegram ID
 
 # States for ConversationHandler
@@ -67,17 +68,22 @@ PRODUCTS = {
             'boost_10': {'name_mm': '10$ Package', 'price_mm': '73,000 MMK'},
         }
     },
+    'telegram_premium': {
+        'name_mm': 'Telegram Premium',
+        'options': {
+            'tg_3months': {'name_mm': '3 Months', 'price_mm': '60,000 MMK', 'note_mm': '✅ Gift Link ဖြင့်ပေးပါတယ်။ Visa Card ဖြင့် ဝယ်ပေးတာဖြစ်ပါတယ်။ Account 100% အာမခံပါတယ်။'},
+            'tg_6months': {'name_mm': '6 Months', 'price_mm': '89,000 MMK', 'note_mm': '✅ Gift Link ဖြင့်ပေးပါတယ်။ Visa Card ဖြင့် ဝယ်ပေးတာဖြစ်ပါတယ်။ Account 100% အာမခံပါတယ်။'},
+            'tg_1year': {'name_mm': '1 Year', 'price_mm': '147,000 MMK', 'note_mm': '✅ Gift Link ဖြင့်ပေးပါတယ်။ Visa Card ဖြင့် ဝယ်ပေးတာဖြစ်ပါတယ်။ Account 100% အာမခံပါတယ်။'},
+        }
+    },
     'tiktok_coin': {
         'name_mm': 'TikTok Coin Service',
         'options': {
-            'coin_3': {'name_mm': '3$ Package', 'price_mm': '20,000 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။'},
-            'coin_4': {'name_mm': '4$ Package', 'price_mm': '27,500 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။'},
-            'coin_5': {'name_mm': '5$ Package', 'price_mm': '34,500 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။'},
-            'coin_6': {'name_mm': '6$ Package', 'price_mm': '42,000 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။'},
-            'coin_7': {'name_mm': '7$ Package', 'price_mm': '49,500 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။'},
-            'coin_8': {'name_mm': '8$ Package', 'price_mm': '57,000 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။'},
-            'coin_9': {'name_mm': '9$ Package', 'price_mm': '64,000 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။'},
-            'coin_10': {'name_mm': '10$ Package', 'price_mm': '71,000 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။'},
+            'coin_300': {'name_mm': '300 Coins', 'price_mm': '17,200 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။ (15 မိနစ်အတွင်း)'},
+            'coin_500': {'name_mm': '500 Coins', 'price_mm': '28,600 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။ (15 မိနစ်အတွင်း)'},
+            'coin_1000': {'name_mm': '1,000 Coins', 'price_mm': '54,800 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။ (15 မိနစ်အတွင်း)'},
+            'coin_5000': {'name_mm': '5,000 Coins', 'price_mm': '266,000 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။ (15 မိနစ်အတွင်း)'},
+            'coin_10000': {'name_mm': '10,000 Coins', 'price_mm': '522,500 MMK', 'note_mm': '✅ Account 100% တာဝန်ယူပေးပါတယ်။ Coin ဝယ်ပြီးတာနဲ့ Logout ပြန်ထွက်ပြီး SS ပြန်ပို့ပေးပါမယ်။ (15 မိနစ်အတွင်း)'},
         }
     },
 }
@@ -85,7 +91,8 @@ PRODUCTS = {
 # Payment Info
 PAYMENT_INFO_MM = (
     "💳 ငွေပေးချေရန်:\n\n"
-    "KBZPay: 09943257604 (Thiha Tun)\n\n"
+    "KBZPay: 09943257604 (Thiha Tun)\n"
+    "UAB Pay: 09943257604 (Thiha Tun)\n\n"
     "📸 ငွေလွှဲပြီးပါက Screenshot ပို့ပေးပါ။"
 )
 
