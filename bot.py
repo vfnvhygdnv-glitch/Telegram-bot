@@ -117,16 +117,10 @@ DAILY_POSTS = [
         'caption': "💎 Telegram Premium ရဲ့ ထူးခြားတဲ့ Features များ\n\n⚡ 4GB အထိ ဖိုင်ပို့နိုင်ခြင်း\n⚡ Download Speed 2 ဆ မြန်ဆန်ခြင်း\n⚡ Sticker & Emoji Premium Pack များ\n⚡ Chat Folders ပိုမိုများပြားခြင်း\n⚡ Voice-to-Text Transcription\n⚡ No Ads (ကြော်ငြာကင်းစင်)\n\nဒီ Features တွေအားလုံးကို တစ်နှစ်လုံးမှ 147,000 ကျပ်ထဲနဲ့ ရယူနိုင်ပါပြီ။\n\n📲 မှာယူရန်: @ThihaTun4055\n@ThihaDigitalProductService",
         'image': 'price_telegram_premium.png'
     },
-    # Day 3 - CapCut Pro မိတ်ဆက်
-    {
-        'caption': "🎬 CapCut Pro ဖြင့် သင့်ဗီဒီယိုများကို နောက်တစ်ဆင့်သို့ မြှင့်တင်လိုက်ပါ ✨\n\nပရော်ဖက်ရှင်နယ်ဆန်သော ဗီဒီယိုတည်းဖြတ်မှုများအတွက် အကောင်းဆုံးရွေးချယ်မှု! 🎬\n\n📱 Share - 10,000 MMK\n🔒 1 Device Private - 17,000 MMK\n💻 2 Device Private - 25,000 MMK\n\n✅ Private Acc = ရောင်းသူမှ Gmail ပေးပါမည်\n\n📲 မှာယူရန်: @ThihaTun4055\n@ThihaDigitalProductService",
-        'image': 'price_capcut_pro.png'
-    },
-    # Day 4 - CapCut Pro Tips
-    {
-        'caption': "💎 CapCut Pro ရဲ့ Hidden Gem - Green Screen Effect ကို ဘယ်လိုအသုံးချမလဲ? 🤔\n\nCapCut Pro မှာ Background Remove, AI Effects, Keyframe Animation စတဲ့ Pro Features တွေ အကုန်ပါဝင်ပါတယ်။\n\nVideo Editing ကို Professional Level ရောက်ချင်ရင် CapCut Pro ကို အခုပဲ ရယူလိုက်ပါ 👉 @ThihaDigitalBot\n\n#CapCutProTips #VideoEditing",
-        'image': 'price_capcut_pro.png'
-    },
+    # Day 3 - CapCut Pro (ခဏရပ်ထား - ပစ္စည်းပျက်နေ)
+    None,
+    # Day 4 - CapCut Pro Tips (ခဏရပ်ထား - ပစ္စည်းပျက်နေ)
+    None,
     # Day 5 - TikTok Services မိတ်ဆက်
     {
         'caption': "🎵 TikTok မှာ နာမည်ကြီးချင်လား? 📈\n\n@ThihaDigitalProductService ရဲ့ TikTok Services တွေက သင့်ကို ကူညီပေးပါလိမ့်မယ်။\n\n❤️ Like 1K ── 6,000 MMK\n👁️ View 1K ── 2,000 MMK\n💾 Save 1K ── 1,000 MMK\n👥 Follower 1K (လူအစစ်) ── 23,000 MMK\n🔁 Share 1K ── 700 MMK\n\n✅ မြန်ဆန်သော ဝန်ဆောင်မှု\n✅ လူအစစ် Engagement\n\nသင့် TikTok Account ကို အခုပဲ မြှင့်တင်လိုက်ပါ 🚀\n📲 @ThihaTun4055",
@@ -202,11 +196,8 @@ DAILY_POSTS = [
         'caption': "🤔 Digital Product တွေ ဝယ်ယူရာမှာ မေးလေ့ရှိတဲ့ မေးခွန်းများ (FAQ)\n\n❓ ဘယ်လိုဝယ်ယူရမလဲ?\n➡️ @ThihaDigitalBot မှာ /start နှိပ်ပြီး ရွေးချယ်ပါ\n\n❓ ငွေပေးချေမှု ဘယ်လိုလုပ်ရမလဲ?\n➡️ KBZPay / UAB Pay (09943257604) ဖြင့် လွှဲပြီး SS ပို့ပါ\n\n❓ ဝယ်ယူပြီးရင် ဘယ်လောက်ကြာရင် ရမလဲ?\n➡️ ၁၅ မိနစ်အတွင်း ရပါတယ်\n\n❓ အာမခံ ရှိလား?\n➡️ 100% အာမခံပါတယ်\n\n📲 @ThihaTun4055\n#FAQ #DigitalProducts",
         'image': None
     },
-    # Day 20 - CapCut Pro vs Alight Motion
-    {
-        'caption': "🎬✨ CapCut Pro နဲ့ Alight Motion Premium ဘယ်ဟာက သင့်အတွက် ပိုကောင်းလဲ?\n\n🎬 CapCut Pro:\n• လွယ်ကူမြန်ဆန်တဲ့ Video Editing\n• TikTok/Reels အတွက် အကောင်းဆုံး\n• AI Effects ပါဝင်\n\n🌟 Alight Motion Premium:\n• Motion Graphics & Advanced Effects\n• Professional Animation\n• Keyframe Control\n\nနှစ်ခုလုံး 15,000-25,000 MMK ဈေးနှုန်းနဲ့ ရနိုင်ပါတယ်!\n\nသင့်လိုအပ်ချက်နဲ့ ကိုက်ညီတာကို ရွေးချယ်လိုက်ပါ 🚀\n📲 @ThihaDigitalBot",
-        'image': None
-    },
+    # Day 20 - CapCut Pro vs Alight Motion (ခဏရပ်ထား - CapCut ပစ္စည်းပျက်နေ)
+    None,
     # Day 21 - Customer Testimonial (General)
     {
         'caption': "🙏 Customer Feedback\n\n\"@ThihaDigitalProductService ရဲ့ ဝန်ဆောင်မှုက အရမ်းကောင်းတယ်။ မြန်ဆန်ပြီး ယုံကြည်စိတ်ချရတယ်။ TikTok Coin ဝယ်တာ ၁၅ မိနစ်ပဲ ကြာတယ်!\"\n\n- ကျေနပ်အားရနေတဲ့ Customer တစ်ဦးရဲ့ Feedback ပါ။\n\n🛡️ 100% အာမခံ | ⚡ 15 မိနစ်အတွင်း\n\nသင်လည်း စမ်းသုံးကြည့်ဖို့ ဖိတ်ခေါ်ပါတယ် 👉 @ThihaDigitalBot\n\n#CustomerReview #ThihaDigital",
@@ -232,11 +223,8 @@ DAILY_POSTS = [
         'caption': "🚀 ရောင်းအားတက်ချင်တဲ့ စျေးသည်များအတွက် အထိရောက်ဆုံး TikTok Boosting!\n\n3$ Package ကနေ စတင်ပြီး သင့်ဗီဒီယိုတွေကို Target Customer တွေဆီ အရောက်တွန်းပို့လိုက်ပါ။\n\n📈 Results:\n• Follower တိုးတက်\n• Likes & Views မြင့်တက်\n• Sales ပိုရ\n\nလုပ်ငန်းပိုမို အောင်မြင်လာပါစေ!\n📲 @ThihaTun4055",
         'image': 'price_tiktok_boosting.png'
     },
-    # Day 26 - CapCut Pro Deep Dive
-    {
-        'caption': "🎬 CapCut Pro ရဲ့ Keyframe Animation Feature!\n\nObject တွေကို smooth movement ပေးတဲ့ technique ပါ။ Professional YouTuber တွေ သုံးနေတဲ့ technique ကို CapCut Pro နဲ့ ဖုန်းပေါ်ကနေ လုပ်လို့ရပါပြီ!\n\n📱 Share - 10,000 MMK\n🔒 1 Device Private - 17,000 MMK\n💻 2 Device Private - 25,000 MMK\n\n📲 @ThihaTun4055\n#CapCutPro #VideoEditing",
-        'image': 'price_capcut_pro.png'
-    },
+    # Day 26 - CapCut Pro Deep Dive (ခဏရပ်ထား - ပစ္စည်းပျက်နေ)
+    None,
     # Day 27 - Customer Testimonial (TikTok)
     {
         'caption': "🙏 Customer Feedback\n\n\"@ThihaDigitalProductService ရဲ့ TikTok Services တွေက ကျွန်တော့်ရဲ့ Follower တွေကို အများကြီး တိုးစေခဲ့တယ်။ Boosting လုပ်ပြီး ၂ ရက်အတွင်း Follower 500 တိုးလာတယ်!\"\n\n- ကျေနပ်အားရနေတဲ့ Customer တစ်ဦးရဲ့ Feedback ပါ။\n\nသင်လည်း စမ်းသုံးကြည့်ဖို့ ဖိတ်ခေါ်ပါတယ် 👉 @ThihaDigitalBot\n\n#CustomerReview #TikTokGrowth",
@@ -271,10 +259,28 @@ async def daily_channel_post(context: ContextTypes.DEFAULT_TYPE) -> None:
 
     day_index = context.bot_data['post_day_index']
 
-    # Get today's post content
+    # Get today's post content (skip None entries - disabled products)
     post_data = DAILY_POSTS[day_index % len(DAILY_POSTS)]
+    
+    # Skip disabled posts (None)
+    if post_data is None:
+        logger.info(f"Day {day_index + 1} is disabled (CapCut), skipping...")
+        context.bot_data['post_day_index'] = (day_index + 1) % len(DAILY_POSTS)
+        # Try next day's post
+        next_index = context.bot_data['post_day_index']
+        post_data = DAILY_POSTS[next_index % len(DAILY_POSTS)]
+        if post_data is None:
+            # Skip again if next is also None
+            context.bot_data['post_day_index'] = (next_index + 1) % len(DAILY_POSTS)
+            next_index = context.bot_data['post_day_index']
+            post_data = DAILY_POSTS[next_index % len(DAILY_POSTS)]
+        day_index = context.bot_data['post_day_index']
     caption = post_data['caption']
     image_file = post_data['image']
+    
+    # Ensure @ThihaDigitalBot is in every post
+    if '@ThihaDigitalBot' not in caption:
+        caption += '\n\n🤖 Bot မှာ မှာယူရန်: @ThihaDigitalBot'
 
     try:
         if image_file:
