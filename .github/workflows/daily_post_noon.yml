@@ -2,7 +2,7 @@ name: Daily Noon Telegram Post
 
 on:
   schedule:
-    - cron: "30 5 * * *"
+    - cron: "12 5 * * *"
   workflow_dispatch: {}
 
 jobs:
