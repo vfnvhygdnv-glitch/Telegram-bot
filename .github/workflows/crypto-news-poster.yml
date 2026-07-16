@@ -2,9 +2,7 @@ name: Crypto News Poster
 
 on:
   schedule:
-    - cron: '30 0 * * *'
-    - cron: '30 5 * * *'
-    - cron: '30 12 * * *'
+    - cron: '17 0,5,12 * * *'
   workflow_dispatch: {}
 
 permissions:
