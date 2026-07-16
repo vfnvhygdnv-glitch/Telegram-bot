@@ -2,8 +2,15 @@ name: Crypto News Poster
 
 on:
   schedule:
-    - cron: '17 0,5,12 * * *'
-  workflow_dispatch: {}
+    # Times below are UTC. Myanmar Time (MMT) = UTC + 6:30
+    # Primary trigger + 2 backup times per slot, in case GitHub skips a
+    # scheduled run under load (known GitHub Actions limitation).
+    - cron: '17 0,5,12 * * *'   # primary  (~6:47 / 11:47 / 18:47 MMT)
+    - cron: '22 0,5,12 * * *'   # backup +5 min
+    - cron: '37 0,5,12 * * *'   # backup +20 min
+  repository_dispatch:
+    types: [trigger-crypto-post]   # allows external cron service to trigger
+  workflow_dispatch: {}            # allows manual "Run workflow" testing
 
 permissions:
   contents: write
