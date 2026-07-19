@@ -7,8 +7,9 @@
 
 1. Repo Settings > Secrets and variables > Actions ထဲမှာ secret ရှိပြီးသားဖြစ်နိုင်ပါတယ်
    (ညနေ ၇ နာရီ bot အတွက် ရှိပြီးသား token ကိုပဲ ပြန်သုံးလို့ရပါတယ်):
-   - `TELEGRAM_BOT_TOKEN`
-   - `TELEGRAM_CHAT_ID`
+   - 8264683686:AAEGr8mNpsI4Wm_GLMZYaurjaEomIKAb1u4
+    -1003541478738
+   - 
    (မရှိသေးရင် အသစ်ထည့်ပါ)
 
 2. Settings > Actions > General ထဲမှာ Workflow permissions ကို
