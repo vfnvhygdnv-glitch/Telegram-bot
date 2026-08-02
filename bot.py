@@ -26,10 +26,18 @@ SELECTING_PRODUCT, SELECTING_OPTION, WAITING_FOR_PAYMENT_PROOF = range(3)
 PRODUCTS = {
     'capcut_pro': {
         'name_mm': '🎬 CapCut Pro',
+        'description_mm': (
+            'CapCut Pro Lifetime Access\n'
+            'One Time Payment - တစ်ကြိမ်ပဲ ပေးရမယ်\n'
+            'Lifetime Access - တစ်သက်လုံး သုံးခွင့်\n'
+            '4K Ultra HD - အမြင့်ဆုံး Quality\n'
+            'Premium Transitions - Premium အသွင်ကူးပြောင်းမှုများ\n'
+            'Advanced AI Tools - AI Tools အားလုံး\n'
+            '100GB Cloud Storage - 100GB Cloud Storage\n'
+            'No Watermark - ရေစာ မပါ'
+        ),
         'options': {
-            'capcut_share': {'name_mm': '📱 1 Device (Share)', 'price_mm': '10,000 MMK'},
-            'capcut_1_private': {'name_mm': '🔒 1 Device Private Acc', 'price_mm': '17,000 MMK', 'note_mm': '✅ ရောင်းသူမှ Gmail ပေးပါမည်။'},
-            'capcut_2_private': {'name_mm': '💻 2 Device (Phone+PC) Private', 'price_mm': '25,000 MMK', 'note_mm': '✅ ရောင်းသူမှ Gmail ပေးပါမည်။'},
+            'capcut_lifetime': {'name_mm': '💎 Lifetime Access (တစ်ကြိမ်တည်းပေး)', 'price_mm': '55,000 MMK'},
         }
     },
     'tiktok_services': {
@@ -117,10 +125,16 @@ DAILY_POSTS = [
         'caption': "💎 Telegram Premium ရဲ့ ထူးခြားတဲ့ Features များ\n\n⚡ 4GB အထိ ဖိုင်ပို့နိုင်ခြင်း\n⚡ Download Speed 2 ဆ မြန်ဆန်ခြင်း\n⚡ Sticker & Emoji Premium Pack များ\n⚡ Chat Folders ပိုမိုများပြားခြင်း\n⚡ Voice-to-Text Transcription\n⚡ No Ads (ကြော်ငြာကင်းစင်)\n\nဒီ Features တွေအားလုံးကို တစ်နှစ်လုံးမှ 147,000 ကျပ်ထဲနဲ့ ရယူနိုင်ပါပြီ။\n\n📲 မှာယူရန်: @ThihaTun4055\n@ThihaDigitalProductService",
         'image': 'price_telegram_premium.png'
     },
-    # Day 3 - CapCut Pro (ခဏရပ်ထား - ပစ္စည်းပျက်နေ)
-    None,
-    # Day 4 - CapCut Pro Tips (ခဏရပ်ထား - ပစ္စည်းပျက်နေ)
-    None,
+    # Day 3 - CapCut Pro Lifetime Access
+    {
+        'caption': "🎬 CapCut Pro Lifetime Access ဖြင့် Video Editing အဆင့်မြင့် အတိုင်းအတာအထိ ရောက်ရှိလိုက်ပါ! ✨\n\nCapCut Pro ကို ဝယ်လိုက်ရုံနဲ့ တစ်သက်လုံး အသုံးပြုခွင့်ရပါတယ်။ တစ်ကြိမ်ပဲ ပေးရမယ်၊ နောက်ထပ် ဘယ်တော့မှ ထပ်မပေးရတော့ပါဘူး! 💰\n\n💎 CapCut Pro Lifetime Access ── 55,000 MMK သာ!\n\n✅ One Time Payment - တစ်ကြိမ်တည်းပဲ ပေးရမယ်\n✅ Lifetime Access - တစ်သက်လုံး သုံးခွင့်\n✅ 4K Ultra HD - အမြင့်ဆုံး Quality နဲ့ Export\n✅ Premium Transitions - Premium အသွင်ကူးပြောင်းမှုများ\n✅ Advanced AI Tools - AI Tools အားလုံး Unlock\n✅ 100GB Cloud Storage - 100GB Cloud Storage\n✅ No Watermark - ရေစာ လုံးဝ မပါ\n\nContent Creator တွေအတွက် မရှိမဖြစ် Tool! 🎥\n\n💳 KBZPay / UAB Pay: 09943257604 (Thiha Tun)\n\n📲 အခုပဲ မှာယူရန်: @ThihaDigitalBot\n@ThihaDigitalProductService",
+        'image': 'price_capcut_pro.png'
+    },
+    # Day 4 - CapCut Pro Tips
+    {
+        'caption': "💡 CapCut Pro ကို သုံးပြီး Professional Video ဖန်တီးနည်း 🎬\n\nCapCut Pro ရဲ့ ထူးခြားချက်များ:\n✅ 4K Ultra HD Export - YouTube/TikTok အတွက် အကောင်းဆုံး Quality\n✅ Premium Transitions - Video ကို Cinematic ဆန်စေတယ်\n✅ Advanced AI Tools - Auto Captions, AI Effects\n✅ 100GB Cloud Storage - ဖိုင်တွေ လုံခြုံစွာ သိမ်းဆည်း\n✅ No Watermark - ရေစာ ကင်းစင်ပြီး Professional ဆန်\n\nတစ်ကြိမ်ပဲ ၅၅,၀၀၀ ကျပ်ပေးပြီး တစ်သက်လုံး သုံးနိုင်ပါတယ်! 🚀\n\n💎 CapCut Pro Lifetime Access ── 55,000 MMK\n💳 KBZPay / UAB Pay: 09943257604 (Thiha Tun)\n\n📲 @ThihaDigitalBot မှာ မှာယူရန်\n@ThihaDigitalProductService",
+        'image': 'price_capcut_pro.png'
+    },
     # Day 5 - TikTok Services မိတ်ဆက်
     {
         'caption': "🎵 TikTok မှာ နာမည်ကြီးချင်လား? 📈\n\n@ThihaDigitalProductService ရဲ့ TikTok Services တွေက သင့်ကို ကူညီပေးပါလိမ့်မယ်။\n\n❤️ Like 1K ── 6,000 MMK\n👁️ View 1K ── 2,000 MMK\n💾 Save 1K ── 1,000 MMK\n👥 Follower 1K (လူအစစ်) ── 23,000 MMK\n🔁 Share 1K ── 700 MMK\n\n✅ မြန်ဆန်သော ဝန်ဆောင်မှု\n✅ လူအစစ် Engagement\n\nသင့် TikTok Account ကို အခုပဲ မြှင့်တင်လိုက်ပါ 🚀\n📲 @ThihaTun4055",
@@ -196,8 +210,11 @@ DAILY_POSTS = [
         'caption': "🤔 Digital Product တွေ ဝယ်ယူရာမှာ မေးလေ့ရှိတဲ့ မေးခွန်းများ (FAQ)\n\n❓ ဘယ်လိုဝယ်ယူရမလဲ?\n➡️ @ThihaDigitalBot မှာ /start နှိပ်ပြီး ရွေးချယ်ပါ\n\n❓ ငွေပေးချေမှု ဘယ်လိုလုပ်ရမလဲ?\n➡️ KBZPay / UAB Pay (09943257604) ဖြင့် လွှဲပြီး SS ပို့ပါ\n\n❓ ဝယ်ယူပြီးရင် ဘယ်လောက်ကြာရင် ရမလဲ?\n➡️ ၁၅ မိနစ်အတွင်း ရပါတယ်\n\n❓ အာမခံ ရှိလား?\n➡️ 100% အာမခံပါတယ်\n\n📲 @ThihaTun4055\n#FAQ #DigitalProducts",
         'image': None
     },
-    # Day 20 - CapCut Pro vs Alight Motion (ခဏရပ်ထား - CapCut ပစ္စည်းပျက်နေ)
-    None,
+    # Day 20 - CapCut Pro Lifetime Access
+    {
+        'caption': "🎬 CapCut Pro vs Alight Motion - ဘာကို ရွေးသင့်လဲ? 🤔\n\nVideo Editing Tools ၂ ခုစလုံး ကောင်းပါတယ်! ဒါပေမယ့် CapCut Pro က ပိုအားသာချက်တွေ ရှိပါတယ် 👇\n\nCapCut Pro Features:\n✅ 4K Ultra HD Export\n✅ Premium Transitions\n✅ Advanced AI Tools (Auto Captions, AI Effects)\n✅ 100GB Cloud Storage\n✅ No Watermark\n✅ Lifetime Access - တစ်သက်လုံး သုံးခွင့်\n\n💎 CapCut Pro Lifetime Access ── 55,000 MMK\nOne Time Payment - တစ်ကြိမ်ပဲ ပေးရမယ်! 💰\n\n💳 KBZPay / UAB Pay: 09943257604 (Thiha Tun)\n\n📲 @ThihaDigitalBot မှာ မှာယူရန်\n@ThihaDigitalProductService",
+        'image': 'price_capcut_pro.png'
+    },
     # Day 21 - Customer Testimonial (General)
     {
         'caption': "🙏 Customer Feedback\n\n\"@ThihaDigitalProductService ရဲ့ ဝန်ဆောင်မှုက အရမ်းကောင်းတယ်။ မြန်ဆန်ပြီး ယုံကြည်စိတ်ချရတယ်။ TikTok Coin ဝယ်တာ ၁၅ မိနစ်ပဲ ကြာတယ်!\"\n\n- ကျေနပ်အားရနေတဲ့ Customer တစ်ဦးရဲ့ Feedback ပါ။\n\n🛡️ 100% အာမခံ | ⚡ 15 မိနစ်အတွင်း\n\nသင်လည်း စမ်းသုံးကြည့်ဖို့ ဖိတ်ခေါ်ပါတယ် 👉 @ThihaDigitalBot\n\n#CustomerReview #ThihaDigital",
@@ -223,8 +240,11 @@ DAILY_POSTS = [
         'caption': "🚀 ရောင်းအားတက်ချင်တဲ့ စျေးသည်များအတွက် အထိရောက်ဆုံး TikTok Boosting!\n\n3$ Package ကနေ စတင်ပြီး သင့်ဗီဒီယိုတွေကို Target Customer တွေဆီ အရောက်တွန်းပို့လိုက်ပါ။\n\n📈 Results:\n• Follower တိုးတက်\n• Likes & Views မြင့်တက်\n• Sales ပိုရ\n\nလုပ်ငန်းပိုမို အောင်မြင်လာပါစေ!\n📲 @ThihaTun4055",
         'image': 'price_tiktok_boosting.png'
     },
-    # Day 26 - CapCut Pro Deep Dive (ခဏရပ်ထား - ပစ္စည်းပျက်နေ)
-    None,
+    # Day 26 - CapCut Pro Deep Dive
+    {
+        'caption': "🔥 CapCut Pro က ဘာကြောင့် Content Creator တိုင်းမှာ ရှိသင့်တာလဲ? 🎥\n\nCapCut Pro Lifetime Access ရဲ့ Features အပြည့်အဝ:\n\n🎬 4K Ultra HD - TikTok, YouTube, Instagram Reels အားလုံးအတွက် အမြင့်ဆုံး Quality\n🎨 Premium Transitions - Video ကို Cinematic ဆန်စေတယ်\n🤖 Advanced AI Tools - Auto Captions, AI Effects, Smart Editing\n☁️ 100GB Cloud Storage - ဖိုင်တွေ လုံခြုံစွာ သိမ်းဆည်း\n🚫 No Watermark - ရေစာ လုံးဝ မပါ - Professional ဆန်\n♾️ Lifetime Access - တစ်ကြိမ်ပဲ ၅၅,၀၀၀ ကျပ် ပေးပြီး တစ်သက်လုံး သုံးခွင့်\n\n💎 CapCut Pro Lifetime Access ── 55,000 MMK\nOne Time Payment - နောက်ထပ် ဘယ်တော့မှ ထပ်မပေးရတော့ပါဘူး!\n\n💳 KBZPay / UAB Pay: 09943257604 (Thiha Tun)\n\n📲 အခုပဲ မှာယူရန်: @ThihaDigitalBot\n@ThihaDigitalProductService",
+        'image': 'price_capcut_pro.png'
+    },
     # Day 27 - Customer Testimonial (TikTok)
     {
         'caption': "🙏 Customer Feedback\n\n\"@ThihaDigitalProductService ရဲ့ TikTok Services တွေက ကျွန်တော့်ရဲ့ Follower တွေကို အများကြီး တိုးစေခဲ့တယ်။ Boosting လုပ်ပြီး ၂ ရက်အတွင်း Follower 500 တိုးလာတယ်!\"\n\n- ကျေနပ်အားရနေတဲ့ Customer တစ်ဦးရဲ့ Feedback ပါ။\n\nသင်လည်း စမ်းသုံးကြည့်ဖို့ ဖိတ်ခေါ်ပါတယ် 👉 @ThihaDigitalBot\n\n#CustomerReview #TikTokGrowth",
@@ -599,12 +619,12 @@ def main() -> None:
     )
 
     # ============================================
-    # SCHEDULE DAILY POST AT 7:00 PM MYANMAR TIME
+    # SCHEDULE DAILY POST AT 12:00 PM MYANMAR TIME
     # ============================================
     job_queue = application.job_queue
-    post_time = datetime.time(hour=19, minute=0, second=0, tzinfo=MYANMAR_TZ)
+    post_time = datetime.time(hour=12, minute=0, second=0, tzinfo=MYANMAR_TZ)
     job_queue.run_daily(daily_channel_post, time=post_time, name="daily_channel_post")
-    logger.info(f"📅 Daily channel post scheduled at 7:00 PM Myanmar Time")
+    logger.info(f"📅 Daily channel post scheduled at 12:00 PM Myanmar Time")
 
     # Conversation Handler for customer flow
     conv_handler = ConversationHandler(
