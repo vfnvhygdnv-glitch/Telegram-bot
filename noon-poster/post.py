@@ -5,6 +5,7 @@ import requests
 
 BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
+OWNER_ID = "5911159063"  # Thiha Tun's Telegram ID
 
 CONTENT_FILE = "content.json"
 STATE_FILE = "post_state.json"
@@ -22,6 +23,16 @@ def save_json(path, data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def send_message(chat_id, text, parse_mode=None):
+    """Send a message to a chat."""
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    payload = {"chat_id": chat_id, "text": text}
+    if parse_mode:
+        payload["parse_mode"] = parse_mode
+    resp = requests.post(url, json=payload, timeout=30)
+    return resp
+
+
 def main():
     content = load_json(CONTENT_FILE, [])
     if not content:
@@ -31,30 +42,34 @@ def main():
     state = load_json(STATE_FILE, {"last_index": 0})
     idx = state["last_index"]
 
+    # Loop back to day 1 when all days are done
     if idx >= len(content):
-        print(f"Content အားလုံး ({len(content)} ရက်) တင်ပြီးသွားပါပြီ။ content.json ကို ထပ်ဖြည့်ပါ။")
-        sys.exit(0)
+        idx = 0
+        print(f"Content အားလုံး တင်ပြီးသွားပါပြီ။ Day 1 ကနေ ပြန်စပါမယ်။")
 
     post = content[idx]
     text = post["text"]
 
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    resp = requests.post(
-        url,
-        json={
-            "chat_id": CHAT_ID,
-            "text": text,
-            "parse_mode": "HTML",
-        },
-        timeout=30,
-    )
+    # Add @ThihaDigitalBot link if not present
+    if "@ThihaDigitalBot" not in text:
+        text += "\n\n🤖 ဝယ်ယူရန်: @ThihaDigitalBot"
+
+    # Send to channel
+    resp = send_message(CHAT_ID, text, parse_mode="HTML")
 
     if resp.status_code != 200:
         print(f"Telegram post မအောင်မြင်ပါ: {resp.status_code} {resp.text}")
+        # Notify owner about failure
+        send_message(OWNER_ID, f"❌ Channel Auto-Post (Day {idx + 1}/{len(content)}) fail ဖြစ်ပါတယ်: {resp.text}")
         sys.exit(1)
 
-    print(f"Day {post.get('day', idx + 1)} ကို post တင်ပြီးပါပြီ။")
+    day_num = post.get('day', idx + 1)
+    print(f"Day {day_num} ကို post တင်ပြီးပါပြီ။")
 
+    # Notify owner about successful post
+    send_message(OWNER_ID, f"📢 Channel Auto-Post (Day {idx + 1}/{len(content)}) တင်ပြီးပါပြီ ✅")
+
+    # Move to next day
     state["last_index"] = idx + 1
     save_json(STATE_FILE, state)
 

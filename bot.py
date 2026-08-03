@@ -110,11 +110,13 @@ PAYMENT_INFO_MM = (
 )
 
 # ============================================
-# DAILY AUTO-POST CONTENT (30 Days)
-# Each entry: {'caption': '...', 'image': 'filename or None'}
-# image=None means text-only post
+# NOTE: Daily channel posts are now handled by GitHub Actions (noon-poster/)
+# The bot only handles customer orders and payment flow
 # ============================================
-DAILY_POSTS = [
+
+
+# OLD DAILY_POSTS removed - see noon-poster/content.json instead
+_REMOVED_DAILY_POSTS = [
     # Day 1 - Telegram Premium မိတ်ဆက်
     {
         'caption': "Telegram ကို အရှိန်အဟုန်အပြည့်နဲ့ Premium ဆန်ဆန် သုံးကြမယ် ✨\n\nTelegram ကို အလုပ်အတွက်ပဲဖြစ်ဖြစ်၊ ဖျော်ဖြေရေးအတွက်ပဲဖြစ်ဖြစ် နေ့တိုင်းသုံးနေရသူလား? ဒါဆိုရင် ပိုမိုမြန်ဆန်တဲ့ Download Speed၊ ပိုကြီးမားတဲ့ File Sharing နဲ့ စိတ်ဝင်စားစရာ Feature ပေါင်းများစွာ ပါဝင်တဲ့ Telegram Premium ကို အသုံးပြုဖို့ တိုက်တွန်းပါရစေ။\n\nThiha Digital Product Service မှာ အသက်သာဆုံးနှုန်းထားတွေနဲ့ စိတ်ချလက်ချ ဝယ်ယူရရှိနိုင်ပါပြီဗျာ။ 🥰\n\n💰 စျေးနှုန်းများ:\n3 Months ── 60,000 MMK\n6 Months ── 89,000 MMK\n1 Year ── 147,000 MMK\n\n🛡️ ဝန်ဆောင်မှုအာမခံချက်:\n✅ Gift Link ဖြင့် တရားဝင် မြှင့်တင်ပေးခြင်း\n✅ Visa Card ဖြင့် ဝယ်ပေးတာဖြစ်ပါတယ်\n✅ Account 100% အာမခံ\n\n📲 အခုပဲ မှာယူရန်: @ThihaTun4055\n@ThihaDigitalProductService",
@@ -269,80 +271,9 @@ DAILY_POSTS = [
 
 
 # ============================================
-# SCHEDULED POST FUNCTION
+# NOTE: daily_channel_post function removed
+# Daily posts are now handled by GitHub Actions (noon-poster/post.py)
 # ============================================
-async def daily_channel_post(context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Sends a daily post to the channel at 7:00 PM Myanmar time with image+caption."""
-    # Get current day index (cycles through 30 days)
-    if 'post_day_index' not in context.bot_data:
-        context.bot_data['post_day_index'] = 0
-
-    day_index = context.bot_data['post_day_index']
-
-    # Get today's post content (skip None entries - disabled products)
-    post_data = DAILY_POSTS[day_index % len(DAILY_POSTS)]
-    
-    # Skip disabled posts (None)
-    if post_data is None:
-        logger.info(f"Day {day_index + 1} is disabled (CapCut), skipping...")
-        context.bot_data['post_day_index'] = (day_index + 1) % len(DAILY_POSTS)
-        # Try next day's post
-        next_index = context.bot_data['post_day_index']
-        post_data = DAILY_POSTS[next_index % len(DAILY_POSTS)]
-        if post_data is None:
-            # Skip again if next is also None
-            context.bot_data['post_day_index'] = (next_index + 1) % len(DAILY_POSTS)
-            next_index = context.bot_data['post_day_index']
-            post_data = DAILY_POSTS[next_index % len(DAILY_POSTS)]
-        day_index = context.bot_data['post_day_index']
-    caption = post_data['caption']
-    image_file = post_data['image']
-    
-    # Ensure @ThihaDigitalBot is in every post
-    if '@ThihaDigitalBot' not in caption:
-        caption += '\n\n🤖 Bot မှာ မှာယူရန်: @ThihaDigitalBot'
-
-    try:
-        if image_file:
-            # Send photo with caption
-            image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images', image_file)
-            if os.path.exists(image_path):
-                with open(image_path, 'rb') as photo:
-                    await context.bot.send_photo(
-                        chat_id=CHANNEL_USERNAME,
-                        photo=photo,
-                        caption=caption
-                    )
-            else:
-                # If image not found, send text only
-                await context.bot.send_message(
-                    chat_id=CHANNEL_USERNAME,
-                    text=caption
-                )
-                logger.warning(f"Image not found: {image_path}, sent text only")
-        else:
-            # Text-only post
-            await context.bot.send_message(
-                chat_id=CHANNEL_USERNAME,
-                text=caption
-            )
-
-        logger.info(f"✅ Daily post sent successfully! Day {day_index + 1}")
-
-        # Notify owner
-        await context.bot.send_message(
-            chat_id=OWNER_TELEGRAM_ID,
-            text=f"📢 Channel Auto-Post (Day {day_index + 1}/30) တင်ပြီးပါပြီ ✅"
-        )
-    except Exception as e:
-        logger.error(f"❌ Failed to send daily post: {e}")
-        await context.bot.send_message(
-            chat_id=OWNER_TELEGRAM_ID,
-            text=f"❌ Channel Auto-Post (Day {day_index + 1}) fail ဖြစ်ပါတယ်: {e}"
-        )
-
-    # Move to next day
-    context.bot_data['post_day_index'] = (day_index + 1) % len(DAILY_POSTS)
 
 
 def get_product_details(product_key, option_key):
@@ -618,13 +549,8 @@ def main() -> None:
         .build()
     )
 
-    # ============================================
-    # SCHEDULE DAILY POST AT 12:00 PM MYANMAR TIME
-    # ============================================
-    job_queue = application.job_queue
-    post_time = datetime.time(hour=12, minute=0, second=0, tzinfo=MYANMAR_TZ)
-    job_queue.run_daily(daily_channel_post, time=post_time, name="daily_channel_post")
-    logger.info(f"📅 Daily channel post scheduled at 12:00 PM Myanmar Time")
+    # NOTE: Daily channel posts are handled by GitHub Actions (noon-poster)
+    # This bot only handles customer orders and payment flow
 
     # Conversation Handler for customer flow
     conv_handler = ConversationHandler(
