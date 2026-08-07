@@ -1,6 +1,9 @@
 import logging
 import os
+import json
 import datetime
+import base64
+import requests as http_requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, ConversationHandler, ContextTypes, filters
 
@@ -12,9 +15,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Bot Token and Owner ID
-BOT_TOKEN = os.environ.get('BOT_TOKEN', '8264683686:AAEGr8mNpsI4Wm_GLMZYaurjaEomIKAb1u4')
+BOT_TOKEN = os.environ.get('BOT_TOKEN', '')
 OWNER_TELEGRAM_ID = 5911159063  # Thiha Tun's Telegram ID
 CHANNEL_USERNAME = "@ThihaDigitalProductService"
+
+# GitHub API for state persistence
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
+GITHUB_REPO = "vfnvhygdnv-glitch/Telegram-bot"
+EVENING_STATE_PATH = "evening-poster/post_state.json"
 
 # Myanmar Timezone (UTC+6:30)
 MYANMAR_TZ = datetime.timezone(datetime.timedelta(hours=6, minutes=30))
@@ -109,173 +117,140 @@ PAYMENT_INFO_MM = (
     "📸 ငွေလွှဲပြီးပါက Screenshot ပို့ပေးပါ။"
 )
 
+
 # ============================================
-# NOTE: Daily channel posts are now handled by GitHub Actions (noon-poster/)
-# The bot only handles customer orders and payment flow
+# GITHUB API STATE PERSISTENCE
 # ============================================
+def github_get_state():
+    """Read evening post state from GitHub."""
+    try:
+        headers = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{EVENING_STATE_PATH}"
+        resp = http_requests.get(url, headers=headers, timeout=15)
+        if resp.status_code == 200:
+            data = resp.json()
+            content = base64.b64decode(data["content"]).decode("utf-8")
+            state = json.loads(content)
+            return state, data["sha"]
+        else:
+            logger.warning(f"GitHub get state failed: {resp.status_code}")
+            return {"last_index": 0}, None
+    except Exception as e:
+        logger.error(f"GitHub get state error: {e}")
+        return {"last_index": 0}, None
 
 
-# OLD DAILY_POSTS removed - see noon-poster/content.json instead
-_REMOVED_DAILY_POSTS = [
-    # Day 1 - Telegram Premium မိတ်ဆက်
-    {
-        'caption': "Telegram ကို အရှိန်အဟုန်အပြည့်နဲ့ Premium ဆန်ဆန် သုံးကြမယ် ✨\n\nTelegram ကို အလုပ်အတွက်ပဲဖြစ်ဖြစ်၊ ဖျော်ဖြေရေးအတွက်ပဲဖြစ်ဖြစ် နေ့တိုင်းသုံးနေရသူလား? ဒါဆိုရင် ပိုမိုမြန်ဆန်တဲ့ Download Speed၊ ပိုကြီးမားတဲ့ File Sharing နဲ့ စိတ်ဝင်စားစရာ Feature ပေါင်းများစွာ ပါဝင်တဲ့ Telegram Premium ကို အသုံးပြုဖို့ တိုက်တွန်းပါရစေ။\n\nThiha Digital Product Service မှာ အသက်သာဆုံးနှုန်းထားတွေနဲ့ စိတ်ချလက်ချ ဝယ်ယူရရှိနိုင်ပါပြီဗျာ။ 🥰\n\n💰 စျေးနှုန်းများ:\n3 Months ── 60,000 MMK\n6 Months ── 89,000 MMK\n1 Year ── 147,000 MMK\n\n🛡️ ဝန်ဆောင်မှုအာမခံချက်:\n✅ Gift Link ဖြင့် တရားဝင် မြှင့်တင်ပေးခြင်း\n✅ Visa Card ဖြင့် ဝယ်ပေးတာဖြစ်ပါတယ်\n✅ Account 100% အာမခံ\n\n📲 အခုပဲ မှာယူရန်: @ThihaTun4055\n@ThihaDigitalProductService",
-        'image': 'price_telegram_premium.png'
-    },
-    # Day 2 - Telegram Premium Features ပညာပေး
-    {
-        'caption': "💎 Telegram Premium ရဲ့ ထူးခြားတဲ့ Features များ\n\n⚡ 4GB အထိ ဖိုင်ပို့နိုင်ခြင်း\n⚡ Download Speed 2 ဆ မြန်ဆန်ခြင်း\n⚡ Sticker & Emoji Premium Pack များ\n⚡ Chat Folders ပိုမိုများပြားခြင်း\n⚡ Voice-to-Text Transcription\n⚡ No Ads (ကြော်ငြာကင်းစင်)\n\nဒီ Features တွေအားလုံးကို တစ်နှစ်လုံးမှ 147,000 ကျပ်ထဲနဲ့ ရယူနိုင်ပါပြီ။\n\n📲 မှာယူရန်: @ThihaTun4055\n@ThihaDigitalProductService",
-        'image': 'price_telegram_premium.png'
-    },
-    # Day 3 - CapCut Pro Lifetime Access
-    {
-        'caption': "🎬 CapCut Pro Lifetime Access ဖြင့် Video Editing အဆင့်မြင့် အတိုင်းအတာအထိ ရောက်ရှိလိုက်ပါ! ✨\n\nCapCut Pro ကို ဝယ်လိုက်ရုံနဲ့ တစ်သက်လုံး အသုံးပြုခွင့်ရပါတယ်။ တစ်ကြိမ်ပဲ ပေးရမယ်၊ နောက်ထပ် ဘယ်တော့မှ ထပ်မပေးရတော့ပါဘူး! 💰\n\n💎 CapCut Pro Lifetime Access ── 55,000 MMK သာ!\n\n✅ One Time Payment - တစ်ကြိမ်တည်းပဲ ပေးရမယ်\n✅ Lifetime Access - တစ်သက်လုံး သုံးခွင့်\n✅ 4K Ultra HD - အမြင့်ဆုံး Quality နဲ့ Export\n✅ Premium Transitions - Premium အသွင်ကူးပြောင်းမှုများ\n✅ Advanced AI Tools - AI Tools အားလုံး Unlock\n✅ 100GB Cloud Storage - 100GB Cloud Storage\n✅ No Watermark - ရေစာ လုံးဝ မပါ\n\nContent Creator တွေအတွက် မရှိမဖြစ် Tool! 🎥\n\n💳 KBZPay / UAB Pay: 09943257604 (Thiha Tun)\n\n📲 အခုပဲ မှာယူရန်: @ThihaDigitalBot\n@ThihaDigitalProductService",
-        'image': 'price_capcut_pro.png'
-    },
-    # Day 4 - CapCut Pro Tips
-    {
-        'caption': "💡 CapCut Pro ကို သုံးပြီး Professional Video ဖန်တီးနည်း 🎬\n\nCapCut Pro ရဲ့ ထူးခြားချက်များ:\n✅ 4K Ultra HD Export - YouTube/TikTok အတွက် အကောင်းဆုံး Quality\n✅ Premium Transitions - Video ကို Cinematic ဆန်စေတယ်\n✅ Advanced AI Tools - Auto Captions, AI Effects\n✅ 100GB Cloud Storage - ဖိုင်တွေ လုံခြုံစွာ သိမ်းဆည်း\n✅ No Watermark - ရေစာ ကင်းစင်ပြီး Professional ဆန်\n\nတစ်ကြိမ်ပဲ ၅၅,၀၀၀ ကျပ်ပေးပြီး တစ်သက်လုံး သုံးနိုင်ပါတယ်! 🚀\n\n💎 CapCut Pro Lifetime Access ── 55,000 MMK\n💳 KBZPay / UAB Pay: 09943257604 (Thiha Tun)\n\n📲 @ThihaDigitalBot မှာ မှာယူရန်\n@ThihaDigitalProductService",
-        'image': 'price_capcut_pro.png'
-    },
-    # Day 5 - TikTok Services မိတ်ဆက်
-    {
-        'caption': "🎵 TikTok မှာ နာမည်ကြီးချင်လား? 📈\n\n@ThihaDigitalProductService ရဲ့ TikTok Services တွေက သင့်ကို ကူညီပေးပါလိမ့်မယ်။\n\n❤️ Like 1K ── 6,000 MMK\n👁️ View 1K ── 2,000 MMK\n💾 Save 1K ── 1,000 MMK\n👥 Follower 1K (လူအစစ်) ── 23,000 MMK\n🔁 Share 1K ── 700 MMK\n\n✅ မြန်ဆန်သော ဝန်ဆောင်မှု\n✅ လူအစစ် Engagement\n\nသင့် TikTok Account ကို အခုပဲ မြှင့်တင်လိုက်ပါ 🚀\n📲 @ThihaTun4055",
-        'image': 'price_tiktok_services.png'
-    },
-    # Day 6 - TikTok Tips
-    {
-        'caption': "📈 TikTok Video တွေ Foryou တက်ဖို့ ဘာတွေလုပ်သင့်လဲ? 🤔\n\n✅ Trending Hashtag တွေ အသုံးပြုပါ\n✅ Trending Music တွေ ထည့်ပါ\n✅ Hook ကောင်းကောင်း ထည့်ပါ\n✅ Engagement မြှင့်တင်ပါ\n✅ Post Time ကို ညနေ 6-9 နာရီ ထားပါ\n\nEngagement မြှင့်တင်ဖို့ 👉 @ThihaDigitalBot\n\n#TikTokTips #ForyouPage",
-        'image': 'price_tiktok_services.png'
-    },
-    # Day 7 - TikTok Services Special Offer
-    {
-        'caption': "🎉 ဒီတစ်ပတ်အတွက် အထူးအစီအစဉ်!\n\nTikTok Services တွေကို Package အလိုက် ဝယ်ယူပြီး ပိုမိုသက်သာစွာ သင့် TikTok ကို မြှင့်တင်လိုက်ပါ။ 🎁\n\nLike + View + Save ── Package ဈေးနဲ့ ရနိုင်ပါတယ်!\n\nအသေးစိတ်ကို 👉 @ThihaDigitalBot မှာ မေးမြန်းနိုင်ပါတယ်။\n\n#TikTokPromotion #SpecialOffer",
-        'image': 'price_tiktok_services.png'
-    },
-    # Day 8 - TikTok Coins Top-Up
-    {
-        'caption': "TikTok Live မှာ Coin ကြဲမလား? အကောင့်တိုက်ရိုက် အမြန်ဆုံး Top-Up လုပ်မလား? ⚡🪙\n\nTikTok Creator တွေအတွက် မရှိမဖြစ်လိုအပ်တဲ့ TikTok Coins တွေကို အသက်သာဆုံး စျေးနှုန်း၊ အမြန်ဆုံး စနစ်နဲ့ ဖြည့်သွင်းပေးနေပါပြီ။\n\n⚡ Coins စျေးနှုန်းများ:\n🪨 300 Coins ── 17,200 MMK\n💴 500 Coins ── 28,600 MMK\n💵 1,000 Coins ── 54,800 MMK\n💶 5,000 Coins ── 266,000 MMK\n💎 10,000 Coins ── 522,500 MMK\n\n🔒 ဝန်ဆောင်မှု:\n✅ ဝယ်ယူသူ အကောင့်တိုက်ရိုက် Login ဝင်၍ ဝယ်ယူပေးခြင်း\n✅ ၁၀၀% အကောင့် လုံခြုံမှု အာမခံခြင်း\n✅ ကြာမြင့်ချိန် ၁၅ မိနစ်သာ!\n\n📲 ချက်ချင်း အားဖြည့်ရန်: @ThihaTun4055",
-        'image': 'price_tiktok_coin.png'
-    },
-    # Day 9 - TikTok Coin ပညာပေး
-    {
-        'caption': "💡 TikTok Live လွှင့်ရင် Coin ရှိဖို့ ဘာလို့ လိုတာလဲ?\n\nတခြား Live လွှင့်တဲ့သူတွေကို Coin ပြန်ကြဲပေးခြင်း၊ မိတ်ဆွေဖွဲ့ခြင်းက သင့်အကောင့်ရဲ့ Traffic (လူမြင်နှုန်း) ကို တက်စေပါတယ်။\n\nCoin ကြဲလေ → Live Rank တက်လေ → လူမြင်များလေ → Follower တိုးလေ 🚀\n\nTikTok Coins အားဖြည့်ရန်: @ThihaTun4055\n@ThihaDigitalProductService",
-        'image': 'price_tiktok_coin.png'
-    },
-    # Day 10 - Alight Motion Premium
-    {
-        'caption': "🌟 Alight Motion Premium ဖြင့် သင့်ရဲ့ Creative Ideas တွေကို အသက်သွင်းလိုက်ပါ ✨\n\nMotion Graphics နဲ့ Video Editing အတွက် အကောင်းဆုံး App! 🎬\n\n💎 1 Year ── 15,000 MMK\n\nPremium Features:\n✅ All Effects Unlocked\n✅ No Watermark\n✅ Premium Fonts & Stickers\n✅ Export Quality အမြင့်ဆုံး\n\nအခုပဲ ဝယ်ယူပြီး သင့်ရဲ့ ဖန်တီးမှုတွေကို စတင်လိုက်ပါ 🚀\n📲 @ThihaTun4055",
-        'image': 'price_alight_motion.png'
-    },
-    # Day 11 - Canva Pro
-    {
-        'caption': "🎨 Canva Pro Lifetime ဖြင့် ပရော်ဖက်ရှင်နယ် Design တွေကို အလွယ်တကူ ဖန်တီးလိုက်ပါ 🖌️\n\nGraphic Design အတွက် အကောင်းဆုံး Tool!\n\n💎 1 Year ── 15,000 MMK\n\nCanva Pro Features:\n✅ Premium Templates 100M+\n✅ Background Remover\n✅ Magic Resize\n✅ Brand Kit\n✅ 100GB Cloud Storage\n\nတစ်နှစ်လုံးမှ ၁၅,၀၀၀ ကျပ်ထဲ! 🚀\n📲 @ThihaTun4055",
-        'image': 'price_canva_pro.png'
-    },
-    # Day 12 - Canva Pro Tips
-    {
-        'caption': "✨ Canva Pro ရဲ့ Magic Resize Feature ကို သိပြီးပြီလား?\n\nDesign တစ်ခုကို Facebook, Instagram, TikTok, YouTube Thumbnail အကုန်လုံးအတွက် တစ်ချက်နှိပ်ရုံနဲ့ Size ပြောင်းလို့ရပါတယ်။\n\nDesigner ငှားစရာမလို - Canva Pro နဲ့ ကိုယ်တိုင်လုပ်လိုက်ပါ! 💡\n\nCanva Pro ရယူရန် 👉 @ThihaDigitalBot\n\n#CanvaProTips #GraphicDesign",
-        'image': 'price_canva_pro.png'
-    },
-    # Day 13 - Gemini AI
-    {
-        'caption': "🤖 Google ရဲ့ အဆင့်မြင့်ဆုံးနည်းပညာ Gemini AI ကို Premium Plan နဲ့ အသုံးပြုကြမယ် 🧠🚀\n\nသင့်ရဲ့ နေ့စဥ်အလုပ်တွေ၊ Content ဖန်တီးမှုတွေကို စက္ကန့်ပိုင်းအတွင်း ဖြေရှင်းပေးမယ့် စမတ်ကျတဲ့ လုပ်ဖော်ကိုင်ဖက်!\n\n✨ Gemini AI Advanced:\n✅ AI Chat & Assistant\n✅ Writing & Content Creation\n✅ Coding & Debugging\n✅ Research & Data Analysis\n\n💰 1 Year ── 40,000 MMK သာ!\n\n📲 အခုပဲ မှာယူရန်: @ThihaTun4055\n@ThihaDigitalProductService",
-        'image': 'price_gemini_ai.png'
-    },
-    # Day 14 - Gemini AI ပညာပေး
-    {
-        'caption': "💡 Gemini AI ကို ဘယ်လိုသုံးမလဲ?\n\nContent Creator တွေအတွက်:\n\"ကျွန်တော့်ရဲ့ Digital Product ဆိုင်အတွက် ဆွဲဆောင်မှုရှိတဲ့ စာသား ၃ ခု ရေးပေးပါ\" လို့ မြန်မာလို ရိုက်ထည့်လိုက်ရုံနဲ့ အသင့်သုံး Copywriting တွေ ရလာမှာပါ။\n\nတစ်နှစ်လုံးမှ ၄၀,၀၀၀ ကျပ် = တစ်ရက်ကို ၁၀၀ ကျပ်ကျော်ပဲ ကျသင့်မှာပါ 🥰\n\n📲 @ThihaTun4055\n@ThihaDigitalProductService",
-        'image': 'price_gemini_ai.png'
-    },
-    # Day 15 - TikTok Boosting Service
-    {
-        'caption': "🚀 TikTok မှာ သင့်ဗီဒီယိုတွေကို ပိုမိုလူသိများအောင် Boost လုပ်ချင်လား?\n\n@ThihaDigitalProductService ရဲ့ TikTok Boosting Services!\n\n🟢 3$ ── 22,000 MMK\n🟢 4$ ── 29,500 MMK\n🟡 5$ ── 36,500 MMK\n🟡 6$ ── 44,000 MMK\n🟠 7$ ── 51,500 MMK\n🟠 8$ ── 59,000 MMK\n🔴 9$ ── 66,000 MMK\n🔴 10$ ── 73,000 MMK\n\n✅ Real Engagement\n✅ Target Audience ရွေးချယ်နိုင်\n✅ 24 နာရီအတွင်း Results\n\nသင့် TikTok ကို အခုပဲ မြှင့်တင်လိုက်ပါ 📈\n📲 @ThihaTun4055",
-        'image': 'price_tiktok_boosting.png'
-    },
-    # Day 16 - TikTok Boosting ပညာပေး
-    {
-        'caption': "📊 TikTok Boosting ဘာကြောင့် လိုအပ်တာလဲ?\n\nသင့် Video ကို ပထမ 1 နာရီအတွင်း Engagement မရရင် Algorithm က ဖျက်ချလိုက်ပါတယ်။\n\nBoosting လုပ်ရင်:\n✅ Video ကို Target Audience ဆီ တိုက်ရိုက်ရောက်\n✅ Engagement Rate မြင့်တက်\n✅ Foryou Page တက်နိုင်ခြေ ပိုများ\n✅ Follower Organic တိုးလာ\n\n3$ ကနေ စတင်ပြီး Boost လုပ်နိုင်ပါပြီ!\n📲 @ThihaTun4055",
-        'image': 'price_tiktok_boosting.png'
-    },
-    # Day 17 - Telegram Premium Reminder
-    {
-        'caption': "⭐ စိတ်အနှောင့်အယှက်မရှိ အလုပ်လုပ်နိုင်ဖို့ Telegram Premium!\n\nကြော်ငြာတွေ မမြင်ရတော့ဘူး 🚫\nFile Size 4GB အထိ ပို့နိုင် 📁\nDownload Speed 2x မြန် ⚡\nPremium Stickers & Emoji 🎨\n\n💰 စျေးနှုန်းများ:\n3 Months ── 60,000 MMK\n6 Months ── 89,000 MMK\n1 Year ── 147,000 MMK\n\nGift Link + Visa Card + 100% အာမခံ ✅\n\n📲 @ThihaTun4055\n@ThihaDigitalProductService",
-        'image': 'price_telegram_premium.png'
-    },
-    # Day 18 - Customer Testimonial
-    {
-        'caption': "🙏 Customer Feedback\n\n\"Telegram Premium ကို @ThihaDigitalProductService ကနေ ဝယ်ယူပြီးနောက် Download Speed အရမ်းမြန်လာတယ်။ ကြော်ငြာလည်း မမြင်ရတော့ဘူး။ ဝန်ဆောင်မှုလည်း မြန်ဆန်တယ်!\"\n\n- ကျေနပ်အားရနေတဲ့ Customer တစ်ဦးရဲ့ Feedback ပါ။\n\n✅ Gift Link ဖြင့် 100% Safe\n✅ 15 မိနစ်အတွင်း ရရှိ\n\nသင်လည်း စမ်းသုံးကြည့်ဖို့ ဖိတ်ခေါ်ပါတယ် 👉 @ThihaDigitalBot\n\n#CustomerReview #TelegramPremium",
-        'image': 'price_telegram_premium.png'
-    },
-    # Day 19 - FAQ Post
-    {
-        'caption': "🤔 Digital Product တွေ ဝယ်ယူရာမှာ မေးလေ့ရှိတဲ့ မေးခွန်းများ (FAQ)\n\n❓ ဘယ်လိုဝယ်ယူရမလဲ?\n➡️ @ThihaDigitalBot မှာ /start နှိပ်ပြီး ရွေးချယ်ပါ\n\n❓ ငွေပေးချေမှု ဘယ်လိုလုပ်ရမလဲ?\n➡️ KBZPay / UAB Pay (09943257604) ဖြင့် လွှဲပြီး SS ပို့ပါ\n\n❓ ဝယ်ယူပြီးရင် ဘယ်လောက်ကြာရင် ရမလဲ?\n➡️ ၁၅ မိနစ်အတွင်း ရပါတယ်\n\n❓ အာမခံ ရှိလား?\n➡️ 100% အာမခံပါတယ်\n\n📲 @ThihaTun4055\n#FAQ #DigitalProducts",
-        'image': None
-    },
-    # Day 20 - CapCut Pro Lifetime Access
-    {
-        'caption': "🎬 CapCut Pro vs Alight Motion - ဘာကို ရွေးသင့်လဲ? 🤔\n\nVideo Editing Tools ၂ ခုစလုံး ကောင်းပါတယ်! ဒါပေမယ့် CapCut Pro က ပိုအားသာချက်တွေ ရှိပါတယ် 👇\n\nCapCut Pro Features:\n✅ 4K Ultra HD Export\n✅ Premium Transitions\n✅ Advanced AI Tools (Auto Captions, AI Effects)\n✅ 100GB Cloud Storage\n✅ No Watermark\n✅ Lifetime Access - တစ်သက်လုံး သုံးခွင့်\n\n💎 CapCut Pro Lifetime Access ── 55,000 MMK\nOne Time Payment - တစ်ကြိမ်ပဲ ပေးရမယ်! 💰\n\n💳 KBZPay / UAB Pay: 09943257604 (Thiha Tun)\n\n📲 @ThihaDigitalBot မှာ မှာယူရန်\n@ThihaDigitalProductService",
-        'image': 'price_capcut_pro.png'
-    },
-    # Day 21 - Customer Testimonial (General)
-    {
-        'caption': "🙏 Customer Feedback\n\n\"@ThihaDigitalProductService ရဲ့ ဝန်ဆောင်မှုက အရမ်းကောင်းတယ်။ မြန်ဆန်ပြီး ယုံကြည်စိတ်ချရတယ်။ TikTok Coin ဝယ်တာ ၁၅ မိနစ်ပဲ ကြာတယ်!\"\n\n- ကျေနပ်အားရနေတဲ့ Customer တစ်ဦးရဲ့ Feedback ပါ။\n\n🛡️ 100% အာမခံ | ⚡ 15 မိနစ်အတွင်း\n\nသင်လည်း စမ်းသုံးကြည့်ဖို့ ဖိတ်ခေါ်ပါတယ် 👉 @ThihaDigitalBot\n\n#CustomerReview #ThihaDigital",
-        'image': None
-    },
-    # Day 22 - Bundle Deal
-    {
-        'caption': "🎉 အထူး Bundle Deal!\n\nCapCut Pro + Canva Pro ── Special Package Price!\n\n🎬 CapCut Pro (Video Editing)\n🎨 Canva Pro (Graphic Design)\n\nContent Creator တွေအတွက် မရှိမဖြစ် Tools နှစ်ခုကို Package ဈေးနဲ့ ရယူလိုက်ပါ! 🎁\n\nအသေးစိတ် 👉 @ThihaDigitalBot\n📲 @ThihaTun4055\n\n#BundleDeal #SpecialOffer",
-        'image': None
-    },
-    # Day 23 - TikTok Coin Reminder
-    {
-        'caption': "💰 TikTok Coin တွေကို အသက်သာဆုံး ဈေးနှုန်းနဲ့ ဝယ်ယူလိုက်ပါ!\n\nသင့်အကြိုက်ဆုံး Creator တွေကို Support လုပ်ဖို့ အကောင်းဆုံးအခွင့်အရေး! 💖\n\n🪨 300 Coins ── 17,200 MMK\n💴 500 Coins ── 28,600 MMK\n💵 1,000 Coins ── 54,800 MMK\n💶 5,000 Coins ── 266,000 MMK\n💎 10,000 Coins ── 522,500 MMK\n\n✅ Account 100% အာမခံ\n✅ 15 မိနစ်အတွင်း ပြီးစီး\n\n📲 @ThihaTun4055",
-        'image': 'price_tiktok_coin.png'
-    },
-    # Day 24 - Canva Pro အမြန်ရောင်းချမှု
-    {
-        'caption': "👑 တစ်နှစ်လုံးမှ ၁၅,၀၀၀ ကျပ်ထဲနဲ့ Canva Pro အသုံးပြုခွင့်!\n\nပိုက်ဆံအများကြီး အကုန်ခံပြီး Designer ငှားစရာမလိုဘဲ အမိုက်စား ဒီဇိုင်းတွေကို ကိုယ်တိုင် ဖန်တီးလိုက်ပါ။\n\n✅ Official Account\n✅ သုံးနေရင်း ပျက်သွားမှာ ပူစရာမလို\n✅ 24/7 Support\n\n📲 စာရင်းပေးသွင်းရန်: @ThihaTun4055\n@ThihaDigitalProductService",
-        'image': 'price_canva_pro.png'
-    },
-    # Day 25 - TikTok Boosting Reminder
-    {
-        'caption': "🚀 ရောင်းအားတက်ချင်တဲ့ စျေးသည်များအတွက် အထိရောက်ဆုံး TikTok Boosting!\n\n3$ Package ကနေ စတင်ပြီး သင့်ဗီဒီယိုတွေကို Target Customer တွေဆီ အရောက်တွန်းပို့လိုက်ပါ။\n\n📈 Results:\n• Follower တိုးတက်\n• Likes & Views မြင့်တက်\n• Sales ပိုရ\n\nလုပ်ငန်းပိုမို အောင်မြင်လာပါစေ!\n📲 @ThihaTun4055",
-        'image': 'price_tiktok_boosting.png'
-    },
-    # Day 26 - CapCut Pro Deep Dive
-    {
-        'caption': "🔥 CapCut Pro က ဘာကြောင့် Content Creator တိုင်းမှာ ရှိသင့်တာလဲ? 🎥\n\nCapCut Pro Lifetime Access ရဲ့ Features အပြည့်အဝ:\n\n🎬 4K Ultra HD - TikTok, YouTube, Instagram Reels အားလုံးအတွက် အမြင့်ဆုံး Quality\n🎨 Premium Transitions - Video ကို Cinematic ဆန်စေတယ်\n🤖 Advanced AI Tools - Auto Captions, AI Effects, Smart Editing\n☁️ 100GB Cloud Storage - ဖိုင်တွေ လုံခြုံစွာ သိမ်းဆည်း\n🚫 No Watermark - ရေစာ လုံးဝ မပါ - Professional ဆန်\n♾️ Lifetime Access - တစ်ကြိမ်ပဲ ၅၅,၀၀၀ ကျပ် ပေးပြီး တစ်သက်လုံး သုံးခွင့်\n\n💎 CapCut Pro Lifetime Access ── 55,000 MMK\nOne Time Payment - နောက်ထပ် ဘယ်တော့မှ ထပ်မပေးရတော့ပါဘူး!\n\n💳 KBZPay / UAB Pay: 09943257604 (Thiha Tun)\n\n📲 အခုပဲ မှာယူရန်: @ThihaDigitalBot\n@ThihaDigitalProductService",
-        'image': 'price_capcut_pro.png'
-    },
-    # Day 27 - Customer Testimonial (TikTok)
-    {
-        'caption': "🙏 Customer Feedback\n\n\"@ThihaDigitalProductService ရဲ့ TikTok Services တွေက ကျွန်တော့်ရဲ့ Follower တွေကို အများကြီး တိုးစေခဲ့တယ်။ Boosting လုပ်ပြီး ၂ ရက်အတွင်း Follower 500 တိုးလာတယ်!\"\n\n- ကျေနပ်အားရနေတဲ့ Customer တစ်ဦးရဲ့ Feedback ပါ။\n\nသင်လည်း စမ်းသုံးကြည့်ဖို့ ဖိတ်ခေါ်ပါတယ် 👉 @ThihaDigitalBot\n\n#CustomerReview #TikTokGrowth",
-        'image': 'price_tiktok_services.png'
-    },
-    # Day 28 - Flash Sale Gemini AI
-    {
-        'caption': "⚡ Flash Sale! ဒီနေ့တစ်ရက်တည်းသာ!\n\n🤖 Gemini AI 1 Year ── 40,000 MMK\n\nGoogle ရဲ့ အဆင့်မြင့်ဆုံး AI ကို တစ်နှစ်လုံး အသုံးပြုခွင့်!\n\n✅ Content Writing\n✅ Research & Analysis\n✅ Coding Help\n✅ Creative Ideas\n\nတစ်ရက်ကို ၁၀၀ ကျပ်ကျော်ပဲ ကျသင့်မှာပါ!\n\n📲 အခုပဲ မှာယူပါ: @ThihaTun4055\n#FlashSale #GeminiAI",
-        'image': 'price_gemini_ai.png'
-    },
-    # Day 29 - Cybersecurity Tips
-    {
-        'caption': "🔒 Digital Product တွေ အသုံးပြုရာမှာ လုံခြုံရေးအတွက် သိထားသင့်တဲ့ အချက်များ!\n\n1️⃣ ခိုင်မာတဲ့ Password တွေ အသုံးပြုပါ\n2️⃣ Two-Factor Authentication (2FA) ကို ဖွင့်ထားပါ\n3️⃣ မသင်္ကာဖွယ် Link တွေကို မနှိပ်ပါနဲ့\n4️⃣ Official Source ကနေသာ ဝယ်ယူပါ\n\nသင့်ရဲ့ Digital Data တွေကို ကာကွယ်ပါ 💡\n\nယုံကြည်ရသော Source 👉 @ThihaDigitalBot\n\n#Cybersecurity #DigitalSafety",
-        'image': None
-    },
-    # Day 30 - Thank You & Future Plans
-    {
-        'caption': "🙏 လွန်ခဲ့တဲ့ တစ်လတာကာလအတွင်း @ThihaDigitalProductService ကို အားပေးခဲ့ကြတဲ့ Customer တစ်ဦးစီတိုင်းကို ကျေးဇူးအထူးတင်ပါတယ်ဗျာ။\n\nလူကြီးမင်းတို့ရဲ့ အားပေးမှုက ကျွန်တော်တို့အတွက် အင်အားပါပဲ။ အမြဲတမ်း အကောင်းဆုံး ဖြစ်အောင် ကြိုးစားနေပါဦးမယ်။\n\n🛡️ 100% အာမခံ\n⚡ မြန်ဆန်သော ဝန်ဆောင်မှု\n💰 သက်သာသော ဈေးနှုန်း\n\nနောက်လမှာကော ဘယ်လို Products မျိုးတွေ လိုချင်ကြလဲ? Comment မှာ ပြောခဲ့ကြပါဦး! 💖\n\n📲 @ThihaTun4055\n#ThankYou #FuturePlans",
-        'image': None
-    },
-]
+def github_save_state(state, sha=None):
+    """Save evening post state to GitHub."""
+    try:
+        headers = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{EVENING_STATE_PATH}"
+        content = json.dumps(state, ensure_ascii=False, indent=2)
+        encoded = base64.b64encode(content.encode("utf-8")).decode("utf-8")
+        payload = {
+            "message": "Update evening post state [skip ci]",
+            "content": encoded,
+        }
+        if sha:
+            payload["sha"] = sha
+        else:
+            # Get current SHA
+            get_resp = http_requests.get(url, headers=headers, timeout=15)
+            if get_resp.status_code == 200:
+                payload["sha"] = get_resp.json()["sha"]
+        resp = http_requests.put(url, headers=headers, json=payload, timeout=15)
+        if resp.status_code in (200, 201):
+            logger.info("GitHub state saved successfully")
+            return True
+        else:
+            logger.warning(f"GitHub save state failed: {resp.status_code} {resp.text[:100]}")
+            return False
+    except Exception as e:
+        logger.error(f"GitHub save state error: {e}")
+        return False
 
 
 # ============================================
-# NOTE: daily_channel_post function removed
-# Daily posts are now handled by GitHub Actions (noon-poster/post.py)
+# EVENING AUTO-POST (6:00 PM Myanmar Time)
 # ============================================
+def load_evening_content():
+    """Load evening promo content from local file."""
+    content_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "evening-poster", "content.json")
+    try:
+        with open(content_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.error(f"Failed to load evening content: {e}")
+        return []
 
 
+async def evening_channel_post(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Sends evening promo post with image to channel at 6:00 PM Myanmar Time."""
+    content = load_evening_content()
+    if not content:
+        logger.error("No evening content available")
+        await context.bot.send_message(chat_id=OWNER_TELEGRAM_ID, text="❌ Evening post fail: content.json ဖတ်လို့မရပါ")
+        return
+
+    # Get state from GitHub
+    state, sha = github_get_state()
+    idx = state.get("last_index", 0)
+
+    # Loop back to day 1
+    if idx >= len(content):
+        idx = 0
+
+    post = content[idx]
+    caption = post.get("caption", "")
+    image_file = post.get("image")
+
+    # Ensure @ThihaDigitalBot is in every post
+    if "@ThihaDigitalBot" not in caption:
+        caption += "\n\n🤖 မှာယူရန်: @ThihaDigitalBot"
+
+    try:
+        if image_file:
+            image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "images", image_file)
+            if os.path.exists(image_path):
+                with open(image_path, "rb") as photo:
+                    await context.bot.send_photo(
+                        chat_id=CHANNEL_USERNAME,
+                        photo=photo,
+                        caption=caption
+                    )
+            else:
+                # Image not found, send text only
+                await context.bot.send_message(chat_id=CHANNEL_USERNAME, text=caption)
+                logger.warning(f"Image not found: {image_path}")
+        else:
+            await context.bot.send_message(chat_id=CHANNEL_USERNAME, text=caption)
+
+        logger.info(f"Evening post Day {idx + 1}/{len(content)} sent successfully")
+
+        # Notify owner
+        await context.bot.send_message(
+            chat_id=OWNER_TELEGRAM_ID,
+            text=f"📢 Evening Promo Post (Day {idx + 1}/{len(content)}) တင်ပြီးပါပြီ ✅"
+        )
+
+        # Save new state to GitHub
+        new_state = {"last_index": idx + 1}
+        github_save_state(new_state, sha)
+
+    except Exception as e:
+        logger.error(f"Evening post failed: {e}")
+        try:
+            await context.bot.send_message(
+                chat_id=OWNER_TELEGRAM_ID,
+                text=f"❌ Evening Promo Post (Day {idx + 1}) fail ဖြစ်ပါတယ်: {e}"
+            )
+        except Exception:
+            pass
+
+
+# ============================================
+# CUSTOMER ORDER HANDLERS
+# ============================================
 def get_product_details(product_key, option_key):
     """Helper function to get product and option details."""
     product = PRODUCTS.get(product_key)
@@ -531,6 +506,9 @@ async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
 
 
+# ============================================
+# MAIN
+# ============================================
 def main() -> None:
     """Run the bot."""
     from telegram.request import HTTPXRequest
@@ -549,8 +527,11 @@ def main() -> None:
         .build()
     )
 
-    # NOTE: Daily channel posts are handled by GitHub Actions (noon-poster)
-    # This bot only handles customer orders and payment flow
+    # Schedule evening promo post at 6:00 PM Myanmar Time
+    job_queue = application.job_queue
+    evening_time = datetime.time(hour=18, minute=0, second=0, tzinfo=MYANMAR_TZ)
+    job_queue.run_daily(evening_channel_post, time=evening_time, name="evening_promo_post")
+    logger.info("📅 Evening promo post scheduled at 6:00 PM Myanmar Time")
 
     # Conversation Handler for customer flow
     conv_handler = ConversationHandler(
